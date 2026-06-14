@@ -1,10 +1,11 @@
 {
   "functions": {
-    "index.php": { "runtime": "vercel-php@0.7.2" },
-    "api/cek-ketersediaan.php": { "runtime": "vercel-php@0.7.2" }
+    "api/*.php": {
+      "runtime": "vercel-php@0.7.2"
+    }
   },
   "routes": [
     { "src": "/api/cek-ketersediaan", "dest": "/api/cek-ketersediaan.php" },
-    { "src": "/", "dest": "/index.php" }
+    { "src": "/(.*)", "dest": "/index.php" }
   ]
 }
