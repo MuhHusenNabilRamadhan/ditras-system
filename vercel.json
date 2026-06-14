@@ -1,13 +1,18 @@
 {
-  "builds": [
-    {
-      "src": "**/*.php",
-      "use": "@vercel/php"
+  "functions": {
+    "api/**/*.php": {
+      "runtime": "vercel-php@0.7.2"
+    },
+    "pages/**/*.php": {
+      "runtime": "vercel-php@0.7.2"
+    },
+    "index.php": {
+      "runtime": "vercel-php@0.7.2"
     }
-  ],
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1.php" },
-    { "source": "/pages/(.*)", "destination": "/pages/$1.php" },
-    { "source": "/", "destination": "/index.php" }
+  },
+  "routes": [
+    { "src": "/api/cek-ketersediaan", "dest": "/api/cek-ketersediaan.php" },
+    { "src": "/pages/(.*)", "dest": "/pages/$1" },
+    { "src": "/(.*)", "dest": "/index.php" }
   ]
 }
