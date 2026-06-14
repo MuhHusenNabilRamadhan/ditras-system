@@ -1,7 +1,11 @@
 <?php
 // pages/auth/register.php
-session_start();
-require_once '../../config/database.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// PERBAIKAN: Path absolut berbasis __DIR__ agar database.php ditemukan oleh Vercel Router
+require_once __DIR__ . '/../../config/database.php';
 
 $error = '';
 $success = '';
@@ -111,6 +115,9 @@ if (isset($_POST['register'])) {
                 Sudah punya akun? 
                 <a href="login.php" class="text-emerald-600 font-bold hover:underline ml-1">Sign In</a>
             </p>
+            <a href="/" class="inline-block mt-4 text-[9px] uppercase tracking-wider text-gray-400 hover:text-black underline">
+                ← Kembali ke Beranda Utama
+            </a>
         </div>
     </div>
 

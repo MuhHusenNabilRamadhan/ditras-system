@@ -1,7 +1,7 @@
 <?php
 // pages/admin/dashboard.php
 session_start();
-require_once '../../config/database.php';
+require_once __DIR__ . '/../../config/database.php';
 
 // Menghubungkan variabel $conn bawaan kode lama dengan variabel $pdo dari database.php
 $conn = $pdo; 

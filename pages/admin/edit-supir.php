@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../config/database.php';
+require_once __DIR__ . '/../../config/database.php';
 
 // Ambil ID supir dari URL / parameter modal
 $id = $_GET['id'] ?? null;

@@ -1,7 +1,7 @@
 <?php
 // pages/admin/edit-rute.php
 session_start();
-require_once '../../config/database.php';
+require_once __DIR__ . '/../../config/database.php';
 
 // Proteksi halaman admin
 if (!isset($_SESSION['id_user']) || $_SESSION['role'] !== 'admin') {

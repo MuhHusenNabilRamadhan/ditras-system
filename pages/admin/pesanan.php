@@ -1,7 +1,7 @@
 <?php
 // pages/admin/pesanan.php
 session_start();
-require_once '../../config/database.php';
+require_once __DIR__ . '/../../config/database.php';
 
 // Pastikan hanya admin yang bisa akses
 if (!isset($_SESSION['id_user']) || $_SESSION['role'] !== 'admin') {

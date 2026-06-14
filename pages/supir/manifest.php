@@ -1,7 +1,7 @@
 <?php
 // pages/supir/manifest.php (Tetap Utuh & Aman)
 session_start();
-require_once '../../config/database.php';
+require_once __DIR__ . '/../../config/database.php';
 
 // Pastikan supir sudah login
 if (!isset($_SESSION['id_user'])) {

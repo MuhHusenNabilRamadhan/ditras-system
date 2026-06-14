@@ -1,7 +1,7 @@
 <?php
 // pages/admin/jadwal-aktif.php
 session_start();
-require_once '../../config/database.php';
+require_once __DIR__ . '/../../config/database.php';
 
 // Cek autentikasi dan role admin
 if (!isset($_SESSION['id_user']) || $_SESSION['role'] !== 'admin') {

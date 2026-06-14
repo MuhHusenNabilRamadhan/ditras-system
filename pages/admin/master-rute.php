@@ -1,7 +1,7 @@
 <?php
 // pages/admin/master-rute.php
 session_start();
-require_once '../../config/database.php';
+require_once __DIR__ . '/../../config/database.php';
 
 if (!isset($_SESSION['id_user']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../../auth/login.php");

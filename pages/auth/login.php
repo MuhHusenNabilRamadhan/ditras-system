@@ -1,7 +1,11 @@
 <?php
 // pages/auth/login.php
-session_start();
-require_once '../../config/database.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// PERBAIKAN UTAMA: Menggunakan path absolut berbasis __DIR__ agar aman di Vercel
+require_once __DIR__ . '/../../config/database.php';
 
 $error = '';
 
@@ -31,13 +35,13 @@ if (isset($_POST['login'])) {
             $_SESSION['nama']     = $user['nama'];
             $_SESSION['role']     = $user['role'];
 
-            // Arahkan ke dashboard masing-masing sesuai role
+            // PERBAIKAN: Menggunakan path routing yang jelas dari root domain '/'
             if ($user['role'] == 'admin') {
-                header("Location: ../admin/dashboard.php");
+                header("Location: /pages/admin/dashboard.php");
             } elseif ($user['role'] == 'supir') {
-                header("Location: ../supir/dashboard.php");
+                header("Location: /pages/supir/dashboard.php");
             } else {
-                header("Location: ../pembeli/dashboard.php");
+                header("Location: /pages/pembeli/dashboard.php");
             }
             exit;
         } else {
@@ -118,7 +122,7 @@ if (isset($_POST['login'])) {
                 Belum punya akun? 
                 <a href="register.php" class="text-emerald-600 font-bold hover:underline ml-1">Daftar Di Sini</a>
             </p>
-            <a href="../../index.php" class="inline-block mt-4 text-[9px] uppercase tracking-wider text-gray-400 hover:text-black underline">
+            <a href="/" class="inline-block mt-4 text-[9px] uppercase tracking-wider text-gray-400 hover:text-black underline">
                 ← Kembali ke Beranda Utama
             </a>
         </div>

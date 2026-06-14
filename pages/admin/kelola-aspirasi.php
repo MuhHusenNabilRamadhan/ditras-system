@@ -1,7 +1,7 @@
 <?php
 // pages/admin/kelola-aspirasi.php
 session_start();
-require_once '../../config/database.php'; // Menggunakan $pdo
+require_once __DIR__ . '/../../config/database.php';
 
 $error_msg = '';
 $success_msg = '';

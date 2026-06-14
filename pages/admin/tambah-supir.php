@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../config/database.php';
+require_once __DIR__ . '/../../config/database.php';
 
 if (isset($_POST['simpan'])) {
     $nama   = mysqli_real_escape_string($conn, $_POST['nama_supir']);

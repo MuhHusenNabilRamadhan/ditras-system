@@ -1,6 +1,8 @@
 <?php
 // pages/auth/logout.php
-session_start(); // Mulai session untuk bisa menangkap session yang aktif
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Bersihkan semua variabel session
 session_unset();
@@ -8,7 +10,7 @@ session_unset();
 // Hancurkan session dari server
 session_destroy();
 
-// Arahkan kembali ke halaman index utama (di luar folder pages)
-header("Location: ../../index.php");
+// PERBAIKAN: Mengarahkan secara absolut langsung ke halaman root '/' agar tidak terkena 404 di Vercel
+header("Location: /");
 exit;
 ?>
