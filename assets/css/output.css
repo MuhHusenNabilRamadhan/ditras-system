@@ -1,0 +1,18 @@
+/* assets/css/output.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-[#faf9f6] text-stone-900;
+    }
+    .serif {
+        font-family: 'Cormorant Garamond', serif;
+    }
+}
+
+/* Tambahkan efek hover premium */
+.hover-gold:hover {
+    @apply border-emerald-600 transition duration-300;
+}

@@ -1,0 +1,12 @@
+{
+  "name": "ditras-travel-system",
+  "version": "1.0.0",
+  "description": "Sistem Informasi Travel dan Rental DITRAS",
+  "main": "index.php",
+  "scripts": {
+    "dev": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}
