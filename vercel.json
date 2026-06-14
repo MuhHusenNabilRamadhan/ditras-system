@@ -2,10 +2,16 @@
   "functions": {
     "api/*.php": {
       "runtime": "vercel-php@0.7.2"
+    },
+    "index.php": {
+      "runtime": "vercel-php@0.7.2"
     }
   },
-  "routes": [
-    { "src": "/api/cek-ketersediaan", "dest": "/api/cek-ketersediaan.php" },
-    { "src": "/(.*)", "dest": "/index.php" }
+  "rewrites": [
+    {
+      "source": "/api/cek-ketersediaan",
+      "destination": "/api/cek-ketersediaan.php"
+    },
+    { "source": "/", "destination": "/index.php" }
   ]
 }
