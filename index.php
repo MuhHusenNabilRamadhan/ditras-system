@@ -185,7 +185,7 @@
         >
         <h2 class="text-5xl mt-4 mb-6 italic">Filosofi Perjalanan Kami</h2>
         <p class="text-gray-500 leading-relaxed mb-8 text-sm">
-          Kami percaya bahwa mobilitas bukan sekadar berpindah tempat, melainkan tentang rasa aman selama di perjalanan. Dengan armada modern yang dirawat berkala, penjadwalan supir yang transparan, serta sistem pelacakan digital terintegrasi, kini DITRAS menyajikan standar baru dalam industri transportasi.
+          Kami believe bahwa mobilitas bukan sekadar berpindah tempat, melainkan tentang rasa aman selama di perjalanan. Dengan armada modern yang dirawat berkala, penjadwalan supir yang transparan, serta sistem pelacakan digital terintegrasi, kini DITRAS menyajikan standar baru dalam industri transportasi.
         </p>
         <button
           onclick="scrollToSection('booking')"
@@ -241,6 +241,7 @@
                 >Pilih Layanan Utama</label
               >
               <select 
+                id="resService"
                 required
                 class="w-full bg-transparent border-b border-gray-800 py-3 focus:border-emerald-400 outline-none transition text-gray-400"
               >
@@ -320,7 +321,7 @@
         }
       }
 
-      // 3. Logika Form Cek Simulasi Ketersediaan
+      // 3. Logika Form Cek Database Asli (Menggunakan Fetch API)
       const form = document.getElementById("reservationForm");
       const submitBtn = document.getElementById("submitBtn");
       const loader = document.getElementById("loader");
@@ -331,21 +332,45 @@
       form.addEventListener("submit", function (e) {
         e.preventDefault();
 
-        // Ubah UI menjadi loading
-        btnText.innerText = "Memeriksa Database MySQL...";
+        // Ubah UI menjadi loading saat menghubungi server backend PHP
+        btnText.innerText = "Menghubungkan ke Database...";
         loader.classList.remove("hidden");
         submitBtn.disabled = true;
         submitBtn.classList.add("opacity-50", "cursor-not-allowed");
 
-        // Simulasi pencarian data ke server (2 Detik)
-        setTimeout(() => {
-          const nameInput = document.getElementById("resName").value;
+        // Siapkan data dari input form untuk dikirim
+        const formData = new FormData();
+        formData.append('nama', document.getElementById('resName').value);
+        formData.append('tanggal', document.getElementById('resDate').value);
+        formData.append('layanan', document.getElementById('resService').value);
 
-          // Sembunyikan form, tampilkan pesan sukses simulasi
+        // Eksekusi request ke file handler PHP di folder api/
+        fetch('/api/cek-ketersediaan.php', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Respons jaringan tidak menanggapi dengan baik.');
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Sembunyikan form input dan tampilkan box pesan sukses dari database
           form.classList.add("hidden");
           successMsg.classList.remove("hidden");
-          displayName.innerText = nameInput;
-        }, 2000);
+          displayName.innerText = data.nama;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert("Terjadi kesalahan koneksi atau backend database MySQL bermasalah.");
+          
+          // Kembalikan tombol ke keadaan semula jika error
+          submitBtn.disabled = false;
+          submitBtn.classList.remove("opacity-50", "cursor-not-allowed");
+          loader.classList.add("hidden");
+          btnText.innerText = "Cek Ketersediaan Kursi & Armada";
+        });
       });
     </script>
   </body>
