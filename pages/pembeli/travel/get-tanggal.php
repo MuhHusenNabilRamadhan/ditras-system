@@ -1,7 +1,12 @@
 <?php
 // pages/pembeli/travel/get-tanggal.php
-session_start();
-require_once $_SERVER['DOCUMENT_ROOT'] . '/DITRAS-SYSTEM/config/database.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// PERBAIKAN UTAMA: Menggunakan path absolut berbasis __DIR__ agar database.php ditemukan secara tepat di Vercel
+// Dari folder pages/pembeli/travel/ kita perlu naik 3 tingkat untuk mencapai root folder proyek
+require_once __DIR__ . '/../../../config/database.php';
 
 header('Content-Type: application/json');
 

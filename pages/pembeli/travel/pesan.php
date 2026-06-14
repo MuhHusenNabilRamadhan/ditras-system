@@ -3,8 +3,7 @@
 session_start();
 
 // Panggil database memakai path relatif mundur 3 kali
-require_once '../../../config/database.php';
-
+require_once __DIR__ . '/../../../config/database.php';
 if (!isset($_SESSION['id_user'])) {
     header("Location: ../../auth/login.php");
     exit;

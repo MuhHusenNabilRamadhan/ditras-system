@@ -4,7 +4,7 @@ session_start();
 
 // Karena file ini berada langsung di dalam folder pembeli/, 
 // kita hanya perlu naik 2 tingkat untuk kembali ke root DITRAS-SYSTEM/
-require_once '../../config/database.php';
+require_once __DIR__ . '/../../config/database.php';
 
 if (!isset($_SESSION['id_user'])) {
     header("Location: ../auth/login.php");

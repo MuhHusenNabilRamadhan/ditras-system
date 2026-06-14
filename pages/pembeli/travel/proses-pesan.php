@@ -1,7 +1,7 @@
 <?php
 // pages/pembeli/rental-supir/proses-pesan.php
 session_start();
-require_once '../../../config/database.php';
+require_once __DIR__ . '/../../../config/database.php';
 
 // Pastikan pembeli sudah login sebelum memproses pesanan
 if (!isset($_SESSION['id_user']) || $_SESSION['role'] !== 'pembeli') {
