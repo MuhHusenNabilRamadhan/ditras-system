@@ -8,7 +8,7 @@ if (getenv('VERCEL_URL')) {
     define('BASE_URL', 'http://localhost/ditras/');
 }
 
-// Mengambil kredensial dari Environment Variables
+// Mengambil kredensial dari Environment Variables dengan Fallback nilai langsung
 $host     = getenv('DB_HOST') ?: ($_ENV['DB_HOST'] ?? "gateway01.ap-southeast-1.prod.alicloud.tidbcloud.com");
 $dbname   = getenv('DB_NAME') ?: ($_ENV['DB_NAME'] ?? "db_ditras");
 $username = getenv('DB_USER') ?: ($_ENV['DB_USER'] ?? "8cyG8Tbmd4S7t6a.root");
@@ -21,13 +21,12 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ];
 
-    // Jika berjalan di Vercel atau terhubung ke TiDB Cloud (Port 4000)
+    // JIKA DI VERCEL / PORT TIDE CLOUD (4000)
     if ($port == "4000" || getenv('VERCEL_URL')) {
-        
-        // 1. Cari jalur sertifikat CA bawaan sistem Linux di server Vercel
+        // Mencari file CA Bundle valid di server Linux Vercel
         $ca_paths = [
-            '/etc/pki/tls/certs/ca-bundle.crt',  // Standar Amazon Linux / RedHat (Vercel Runtime standard)
-            '/etc/ssl/certs/ca-certificates.crt', // Standar Ubuntu / Debian
+            '/etc/pki/tls/certs/ca-bundle.crt',   // Amazon Linux (Standar Vercel)
+            '/etc/ssl/certs/ca-certificates.crt',  // Debian/Ubuntu
             '/etc/ssl/cert.pem'
         ];
         
@@ -39,24 +38,34 @@ try {
             }
         }
 
-        // 2. Jika sertifikat sistem ditemukan, pasang ke driver menggunakan nilai integer agar anti-error
+        // SOLUSI MUTLAK: Menggunakan skema URI DSN dengan opsi SSL ketat di dalam string
         if (!empty($found_ca)) {
-            // 1012 adalah nilai integer dari PDO::MYSQL_ATTR_SSL_CA
-            $options[1012] = $found_ca; 
+            $dsn = "mysql:uri=mysql://$username:$password@$host:$port/$dbname?sslca=$found_ca&sslmode=verify-ca";
+        } else {
+            $dsn = "mysql:uri=mysql://$username:$password@$host:$port/$dbname?sslmode=required";
         }
-
-        // 1014 adalah nilai integer dari PDO::MYSQL_ATTR_SSL_MODE
-        // 1 melambangkan MYSQL_ATTR_SSL_MODE_REQUIRED
-        $options[1014] = 1; 
         
-        // Matikan verifikasi cert lokal agar tidak bentrok dengan sertifikat kolektif TiDB Cloud
-        $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+        // Buat koneksi langsung menggunakan skema URI DSN
+        $pdo = new PDO($dsn, null, null, $options);
+
+    } else {
+        // Jalur standar jika Anda testing di Localhost offline (tanpa SSL)
+        $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
+        $pdo = new PDO($dsn, $username, $password, $options);
     }
 
-    // Eksekusi koneksi PDO
-    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $username, $password, $options);
-
 } catch(PDOException $e) {
-    die("Koneksi Database Gagal: " . $e->getMessage());
+    // Jika skema URI mengalami keterbatasan di versi pdo tertentu, gunakan fallback DSN murni
+    try {
+        $fallback_dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
+        if (isset($found_ca) && !empty($found_ca)) {
+            $fallback_dsn .= ";sslca=" . $found_ca;
+        } else {
+            $fallback_dsn .= ";ssl-mode=required";
+        }
+        $pdo = new PDO($fallback_dsn, $username, $password, $options);
+    } catch (PDOException $ex) {
+        die("Koneksi Database Gagal Sempurna: " . $ex->getMessage());
+    }
 }
 ?>
