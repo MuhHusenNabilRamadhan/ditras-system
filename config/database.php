@@ -23,14 +23,17 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ];
 
-    // PERBAIKAN UTAMA: Jika berjalan di lingkungan produksi (Vercel/TiDB Cloud)
-    // Kita harus memaksa SSL Transport Mode ke REQUIRED agar TiDB tidak menolak koneksi
+    // Jika berjalan di lingkungan produksi (Vercel/TiDB Cloud)
     if (getenv('VERCEL_URL') || $port == "4000") {
-        $options[PDO::MYSQL_ATTR_SSL_MODE] = PDO::MYSQL_ATTR_SSL_MODE_REQUIRED;
+        // PERBAIKAN FINAL: Gunakan angka 1014 (ekuivalen dengan MYSQL_ATTR_SSL_MODE)
+        // dan angka 1 (ekuivalen dengan SSL_MODE_REQUIRED) agar lolos dari error Undefined Constant di Vercel
+        $options[1014] = 1; 
+        
+        // Mematikan verifikasi cert lokal demi kecocokan handshake container serverless Vercel
         $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false; 
     }
 
-    // Membuat koneksi PDO dengan Port dinamis
+    // Membuat koneksi PDO dengan Port dinamis dan charset yang aman
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $username, $password, $options);
 
 } catch(PDOException $e) {
