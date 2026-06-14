@@ -1,11 +1,12 @@
 {
   "functions": {
-    "api/*.php": {
-      "runtime": "vercel-php@0.7.2"
-    }
+    "api/**/*.php": { "runtime": "vercel-php@0.7.2" },
+    "pages/**/*.php": { "runtime": "vercel-php@0.7.2" },
+    "index.php": { "runtime": "vercel-php@0.7.2" }
   },
   "routes": [
     { "src": "/api/cek-ketersediaan", "dest": "/api/cek-ketersediaan.php" },
-    { "src": "/(.*)", "dest": "/api/index.php" }
+    { "src": "/pages/(.*)", "dest": "/pages/$1" },
+    { "src": "/(.*)", "dest": "/index.php" }
   ]
 }
